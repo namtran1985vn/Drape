@@ -86,9 +86,12 @@ actor OpenAIImageEditService {
 
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 240   // sinh ảnh có thể mất 30–90s
-        config.timeoutIntervalForResource = 300
+        config.timeoutIntervalForRequest = 300   // 5 phút cho request
+        config.timeoutIntervalForResource = 600  // 10 phút cho toàn bộ task
         config.waitsForConnectivity = true
+        config.allowsCellularAccess = true
+        config.httpMaximumConnectionsPerHost = 1
+        config.networkServiceType = .default
         return URLSession(configuration: config)
     }()
 
@@ -128,7 +131,7 @@ actor OpenAIImageEditService {
         urlRequest.setValue(form.contentType, forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = form.finalize()
 
-        let (data, response) = try await session.data(for: urlRequest)
+        let (data, response) = try await Self.dataWithRetry(session: session, for: urlRequest, maxAttempts: 3)
         let status = (response as? HTTPURLResponse)?.statusCode ?? -1
 
         guard (200..<300).contains(status) else {
@@ -224,7 +227,7 @@ actor OpenAIImageEditService {
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = try JSONEncoder().encode(request)
 
-        let (data, response) = try await session.data(for: urlRequest)
+        let (data, response) = try await Self.dataWithRetry(session: session, for: urlRequest, maxAttempts: 3)
         let status = (response as? HTTPURLResponse)?.statusCode ?? -1
 
         guard (200..<300).contains(status) else {
@@ -261,7 +264,7 @@ actor OpenAIImageEditService {
     func validate(key: String) async -> Bool {
         var req = URLRequest(url: URL(string: "https://api.openai.com/v1/models")!)
         req.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
-        guard let (_, resp) = try? await session.data(for: req) else { return false }
+        guard let (_, resp) = try? await Self.dataWithRetry(session: session, for: req, maxAttempts: 2) else { return false }
         return (resp as? HTTPURLResponse)?.statusCode == 200
     }
 
@@ -273,6 +276,48 @@ actor OpenAIImageEditService {
         if let e = try? JSONDecoder().decode(ErrorEnvelope.self, from: data),
            let m = e.error?.message { return m }
         return String(data: data, encoding: .utf8) ?? "unknown"
+    }
+
+    private static func dataWithRetry(
+        session: URLSession,
+        for request: URLRequest,
+        maxAttempts: Int = 3
+    ) async throws -> (Data, URLResponse) {
+        var lastError: Error?
+
+        for attempt in 1...maxAttempts {
+            do {
+                return try await session.data(for: request)
+            } catch let error as URLError {
+                lastError = error
+                // Retry on network errors
+                if attempt < maxAttempts && Self.isRetryableError(error) {
+                    let delaySeconds = Double(attempt) * 2  // exponential backoff: 2s, 4s
+                    try await Task.sleep(nanoseconds: UInt64(delaySeconds * 1_000_000_000))
+                    continue
+                }
+                throw error
+            } catch {
+                throw error
+            }
+        }
+
+        throw lastError ?? OpenAIError.api(status: -1, message: "Unknown network error")
+    }
+
+    private static func isRetryableError(_ error: URLError) -> Bool {
+        switch error.code {
+        case .networkConnectionLost,
+             .timedOut,
+             .notConnectedToInternet,
+             .resourceUnavailable,
+             .cannotConnectToHost,
+             .cannotFindHost,
+             .dnsLookupFailed:
+            return true
+        default:
+            return false
+        }
     }
 }
 
