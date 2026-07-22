@@ -10,6 +10,7 @@ final class ComposerModel {
     var roomImage: UIImage?
     var productImage: UIImage?
     var placement: Placement = .sofaThrow
+    var customInstruction = ""
     var extraNotes = ""
     var model: ImageModel = .v1_5
     var size: OutputSize = .portrait
@@ -47,7 +48,7 @@ final class ComposerModel {
 
         let prompt = PromptBuilder.build(
             placement: placement,
-            customInstruction: "",
+            customInstruction: customInstruction,
             extraNotes: extraNotes
         )
 
@@ -113,6 +114,12 @@ struct ComposerView: View {
                             }
                         }
                         .frame(height: 44)
+                    }
+
+                    Section("Hướng dẫn tùy chỉnh") {
+                        TextField("VD: sáng hơn một chút, khung cảnh gần hơn…", text: $vm.customInstruction, axis: .vertical)
+                            .lineLimit(2...5)
+                            .font(.system(.body, design: .default))
                         TextField("Ghi chú thêm (tuỳ chọn)", text: $vm.extraNotes, axis: .vertical)
                             .lineLimit(1...3)
                     }
