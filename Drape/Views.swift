@@ -14,28 +14,28 @@ final class ComposerModel {
     var extraNotes = ""
     var model: ImageModel = .mini
 
-    var result: UIImage?
-    var isRunning = false
+    var completedResult: UIImage?   // ảnh vừa tạo xong gần nhất — KHÔNG bị reset xoá
+    var completedTokens: Int?
+    var activeJobs = 0              // số ảnh đang tạo ở nền
     var isAnalyzing = false
     var errorMessage: String?
-    var lastTokens: Int?
 
     private let service = OpenAIImageEditService()
 
+    /// Có thể bấm "Tạo ảnh" hay không — độc lập với các job đang chạy nền.
     var canRun: Bool {
-        roomImage != nil && productImage != nil && !isRunning && APIKeyStore.hasKey
+        roomImage != nil && productImage != nil && APIKeyStore.hasKey
     }
 
-    func resetSession() {
+    /// Chỉ xoá phần nhập liệu của session hiện tại, giữ nguyên ảnh kết quả đã xong.
+    func resetForm() {
         roomImage = nil
         productImage = nil
         placement = .sofaThrow
         customInstruction = ""
         extraNotes = ""
         model = .mini
-        result = nil
         errorMessage = nil
-        lastTokens = nil
     }
 
     func analyzeAndSetPlacement() async {
@@ -51,42 +51,37 @@ final class ComposerModel {
         }
     }
 
-    func run() async {
+    /// Bắt đầu tạo ảnh ở NỀN rồi trả về ngay — form được giải phóng để làm session mới.
+    /// Không async: việc gọi mạng chạy trong Task riêng, không khóa nút bấm.
+    func run() {
         guard let room = roomImage, let product = productImage else { return }
-        isRunning = true
-        errorMessage = nil
 
-        let prompt = PromptBuilder.build(
-            placement: placement,
-            customInstruction: customInstruction,
-            extraNotes: extraNotes
+        let request = EditRequest(
+            roomImage: room,
+            productImage: product,
+            prompt: PromptBuilder.build(
+                placement: placement,
+                customInstruction: customInstruction,
+                extraNotes: extraNotes
+            ),
+            model: model
         )
 
-        let savedRoom = room
-        let savedProduct = product
-        let savedPrompt = prompt
-        let savedModel = model
+        resetForm()          // giải phóng form ngay lập tức
+        activeJobs += 1      // đánh dấu có 1 job đang chạy nền
 
-        resetSession()
-
-        do {
-            let out = try await service.edit(
-                EditRequest(
-                    roomImage: savedRoom,
-                    productImage: savedProduct,
-                    prompt: savedPrompt,
-                    model: savedModel
-                )
-            )
-            result = out.image
-            lastTokens = out.totalTokens
-            await sendNotification(title: "Ảnh sản phẩm sẵn sàng", body: "Tạo ảnh thành công")
-        } catch {
-            errorMessage = error.localizedDescription
-            await sendNotification(title: "Lỗi tạo ảnh", body: error.localizedDescription)
+        Task {
+            defer { activeJobs -= 1 }
+            do {
+                let out = try await service.edit(request)
+                completedResult = out.image
+                completedTokens = out.totalTokens
+                await sendNotification(title: "Ảnh sản phẩm sẵn sàng", body: "Tạo ảnh thành công")
+            } catch {
+                errorMessage = error.localizedDescription
+                await sendNotification(title: "Lỗi tạo ảnh", body: error.localizedDescription)
+            }
         }
-
-        isRunning = false
     }
 
     private func sendNotification(title: String, body: String) async {
@@ -154,15 +149,18 @@ struct ComposerView: View {
                 Section {
                     Button {
                         showBackgroundNotice = true
-                        Task { await vm.run() }
+                        vm.run()
                     } label: {
-                        HStack {
-                            if vm.isRunning { ProgressView().padding(.trailing, 6) }
-                            Text(vm.isRunning ? "Đang dựng ảnh…" : "Tạo ảnh")
-                        }
-                        .frame(maxWidth: .infinity)
+                        Text("Tạo ảnh")
+                            .frame(maxWidth: .infinity)
                     }
                     .disabled(!vm.canRun)
+
+                    if vm.activeJobs > 0 {
+                        Label("\(vm.activeJobs) ảnh đang tạo ở nền…", systemImage: "clock.arrow.circlepath")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
 
                     if !APIKeyStore.hasKey {
                         Label("Chưa có API key — mở Cài đặt", systemImage: "key.slash")
@@ -177,13 +175,13 @@ struct ComposerView: View {
                     }
                 }
 
-                if let result = vm.result {
-                    Section("Kết quả") {
+                if let result = vm.completedResult {
+                    Section("Kết quả gần nhất") {
                         Image(uiImage: result)
                             .resizable().scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         ShareLink(item: Image(uiImage: result), preview: .init("Ảnh sản phẩm"))
-                        if let t = vm.lastTokens {
+                        if let t = vm.completedTokens {
                             Text("\(t) tokens").font(.caption2).foregroundStyle(.secondary)
                         }
                     }
