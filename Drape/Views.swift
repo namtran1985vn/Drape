@@ -27,6 +27,17 @@ final class ComposerModel {
         roomImage != nil && productImage != nil && !isRunning && !isAnalyzing && APIKeyStore.hasKey
     }
 
+    func resetSession() {
+        roomImage = nil
+        productImage = nil
+        placement = .sofaThrow
+        customInstruction = ""
+        extraNotes = ""
+        result = nil
+        errorMessage = nil
+        lastTokens = nil
+    }
+
     func analyzeAndSetPlacement() async {
         guard let room = roomImage else { return }
         isAnalyzing = true
@@ -44,7 +55,6 @@ final class ComposerModel {
         guard let room = roomImage, let product = productImage else { return }
         isRunning = true
         errorMessage = nil
-        defer { isRunning = false }
 
         let prompt = PromptBuilder.build(
             placement: placement,
@@ -52,14 +62,22 @@ final class ComposerModel {
             extraNotes: extraNotes
         )
 
+        let savedRoom = room
+        let savedProduct = product
+        let savedPrompt = prompt
+        let savedModel = model
+        let savedSize = size
+
+        resetSession()
+
         do {
             let out = try await service.edit(
                 EditRequest(
-                    roomImage: room,
-                    productImage: product,
-                    prompt: prompt,
-                    model: model,
-                    size: size
+                    roomImage: savedRoom,
+                    productImage: savedProduct,
+                    prompt: savedPrompt,
+                    model: savedModel,
+                    size: savedSize
                 )
             )
             result = out.image
@@ -69,6 +87,8 @@ final class ComposerModel {
             errorMessage = error.localizedDescription
             await sendNotification(title: "Lỗi tạo ảnh", body: error.localizedDescription)
         }
+
+        isRunning = false
     }
 
     private func sendNotification(title: String, body: String) async {
@@ -87,10 +107,12 @@ final class ComposerModel {
 struct ComposerView: View {
     @State private var vm = ComposerModel()
     @State private var showSettings = false
+    @State private var showBackgroundNotice = false
 
     var body: some View {
-        NavigationStack {
-            Form {
+        ZStack {
+            NavigationStack {
+                Form {
                 Section("Ảnh") {
                     HStack(spacing: 12) {
                         ImageSlot(title: "Phòng", image: $vm.roomImage)
@@ -136,6 +158,7 @@ struct ComposerView: View {
 
                 Section {
                     Button {
+                        showBackgroundNotice = true
                         Task { await vm.run() }
                     } label: {
                         HStack {
@@ -170,12 +193,43 @@ struct ComposerView: View {
                         }
                     }
                 }
+                }
+                .navigationTitle("Thử sản phẩm")
+                .toolbar {
+                    Button { showSettings = true } label: { Image(systemName: "gearshape") }
+                }
+                .sheet(isPresented: $showSettings) { SettingsView() }
             }
-            .navigationTitle("Thử sản phẩm")
-            .toolbar {
-                Button { showSettings = true } label: { Image(systemName: "gearshape") }
+
+            VStack {
+                if showBackgroundNotice {
+                    VStack(spacing: 8) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Đang tạo ảnh")
+                                    .fontWeight(.semibold)
+                                Text("Chạy ở background, bạn sẽ nhận thông báo khi xong")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Button(action: { showBackgroundNotice = false }) {
+                                Image(systemName: "xmark")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(12)
+                        .background(Color(.systemGreen).opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                    .padding()
+                    .transition(.move(edge: .top).combined(with: .opacity))
+
+                    Spacer()
+                }
             }
-            .sheet(isPresented: $showSettings) { SettingsView() }
         }
     }
 }
