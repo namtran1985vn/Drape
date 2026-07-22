@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import UserNotifications
 
 // MARK: - ViewModel
 
@@ -62,9 +63,21 @@ final class ComposerModel {
             )
             result = out.image
             lastTokens = out.totalTokens
+            await sendNotification(title: "Ảnh sản phẩm sẵn sàng", body: "Tạo ảnh thành công")
         } catch {
             errorMessage = error.localizedDescription
+            await sendNotification(title: "Lỗi tạo ảnh", body: error.localizedDescription)
         }
+    }
+
+    private func sendNotification(title: String, body: String) async {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        try? await UNUserNotificationCenter.current().add(request)
     }
 }
 
