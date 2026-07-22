@@ -24,7 +24,7 @@ final class ComposerModel {
     private let service = OpenAIImageEditService()
 
     var canRun: Bool {
-        roomImage != nil && productImage != nil && !isRunning && !isAnalyzing && APIKeyStore.hasKey
+        roomImage != nil && productImage != nil && !isRunning && APIKeyStore.hasKey
     }
 
     func resetSession() {
