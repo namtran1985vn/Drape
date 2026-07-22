@@ -1,0 +1,438 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AB09811225E426272F31543 /* OpenAIImageEditService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B3B1CE45F27F3F91353A34 /* OpenAIImageEditService.swift */; };
+		28CDCBD88F60E09A1FABD4A8 /* DrapeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F98226E2F251E53EDECD434 /* DrapeApp.swift */; };
+		4A9208984F9F3DA7DDDEF870 /* APIKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5DAC4735DFBB6AFEA551E2 /* APIKeyStore.swift */; };
+		703F17B710A8B1499520D2CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6034F2C9E911C956FAA2A38 /* Assets.xcassets */; };
+		7E08A66A8CE3BED88578B42A /* PromptBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC11741CB1AB0B2A78472DF6 /* PromptBuilderTests.swift */; };
+		9BB68DC11BB0E28A46ED8133 /* PromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226987A16BC4582AFBA8FCDD /* PromptBuilder.swift */; };
+		AAF88AF6BA2E5DD316817C6C /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5B25F7974B606BC0705BD /* Views.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		33A6579399022BF9C76BD7D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40F312D578436388E0B2C39F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ADECD66E4DA02DA39F55EEE7;
+			remoteInfo = Drape;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		226987A16BC4582AFBA8FCDD /* PromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptBuilder.swift; sourceTree = "<group>"; };
+		6F98226E2F251E53EDECD434 /* DrapeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrapeApp.swift; sourceTree = "<group>"; };
+		7A5DAC4735DFBB6AFEA551E2 /* APIKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyStore.swift; sourceTree = "<group>"; };
+		84F5B25F7974B606BC0705BD /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		B5B3B1CE45F27F3F91353A34 /* OpenAIImageEditService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIImageEditService.swift; sourceTree = "<group>"; };
+		BC11741CB1AB0B2A78472DF6 /* PromptBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptBuilderTests.swift; sourceTree = "<group>"; };
+		BC8996B7E0390E8BEBEC9ACF /* DrapeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DrapeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE919180F3BF31CCE8811CF3 /* Drape.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Drape.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6034F2C9E911C956FAA2A38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		4049076B12BE04A90108F3FC /* Drape */ = {
+			isa = PBXGroup;
+			children = (
+				7A5DAC4735DFBB6AFEA551E2 /* APIKeyStore.swift */,
+				F6034F2C9E911C956FAA2A38 /* Assets.xcassets */,
+				6F98226E2F251E53EDECD434 /* DrapeApp.swift */,
+				B5B3B1CE45F27F3F91353A34 /* OpenAIImageEditService.swift */,
+				226987A16BC4582AFBA8FCDD /* PromptBuilder.swift */,
+				84F5B25F7974B606BC0705BD /* Views.swift */,
+			);
+			path = Drape;
+			sourceTree = "<group>";
+		};
+		9028CC9797188FB27D65A675 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BE919180F3BF31CCE8811CF3 /* Drape.app */,
+				BC8996B7E0390E8BEBEC9ACF /* DrapeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92970CA6E91BA8A59B8A1582 /* DrapeTests */ = {
+			isa = PBXGroup;
+			children = (
+				BC11741CB1AB0B2A78472DF6 /* PromptBuilderTests.swift */,
+			);
+			path = DrapeTests;
+			sourceTree = "<group>";
+		};
+		CA328214CA2F05E744226244 = {
+			isa = PBXGroup;
+			children = (
+				4049076B12BE04A90108F3FC /* Drape */,
+				92970CA6E91BA8A59B8A1582 /* DrapeTests */,
+				9028CC9797188FB27D65A675 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		87F40BB2B13C6FD1614A3527 /* DrapeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC0780BD599AA3ECEE43E04E /* Build configuration list for PBXNativeTarget "DrapeTests" */;
+			buildPhases = (
+				69C1E6B2C2872A6B70F76B84 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8EBAA89AE425ACD279FAD706 /* PBXTargetDependency */,
+			);
+			name = DrapeTests;
+			packageProductDependencies = (
+			);
+			productName = DrapeTests;
+			productReference = BC8996B7E0390E8BEBEC9ACF /* DrapeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		ADECD66E4DA02DA39F55EEE7 /* Drape */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4775598F8C7963F9D4B2301F /* Build configuration list for PBXNativeTarget "Drape" */;
+			buildPhases = (
+				5AC10CCF9224B0658708DED4 /* Sources */,
+				538705BE5E435847E5B7BCD1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Drape;
+			packageProductDependencies = (
+			);
+			productName = Drape;
+			productReference = BE919180F3BF31CCE8811CF3 /* Drape.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		40F312D578436388E0B2C39F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = C63D5D17B025B0A98131581D /* Build configuration list for PBXProject "Drape" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CA328214CA2F05E744226244;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9028CC9797188FB27D65A675 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ADECD66E4DA02DA39F55EEE7 /* Drape */,
+				87F40BB2B13C6FD1614A3527 /* DrapeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		538705BE5E435847E5B7BCD1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				703F17B710A8B1499520D2CE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5AC10CCF9224B0658708DED4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A9208984F9F3DA7DDDEF870 /* APIKeyStore.swift in Sources */,
+				28CDCBD88F60E09A1FABD4A8 /* DrapeApp.swift in Sources */,
+				1AB09811225E426272F31543 /* OpenAIImageEditService.swift in Sources */,
+				9BB68DC11BB0E28A46ED8133 /* PromptBuilder.swift in Sources */,
+				AAF88AF6BA2E5DD316817C6C /* Views.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69C1E6B2C2872A6B70F76B84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E08A66A8CE3BED88578B42A /* PromptBuilderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8EBAA89AE425ACD279FAD706 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ADECD66E4DA02DA39F55EEE7 /* Drape */;
+			targetProxy = 33A6579399022BF9C76BD7D7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C09BD9DEAE8736B3C6D9694 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4E968A572FD16759EF363A46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Chọn ảnh phòng và ảnh sản phẩm để dựng ảnh.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.neo.productinroom;
+				PRODUCT_NAME = Drape;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6E41FADB3C9D8A8F0F725290 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Chọn ảnh phòng và ảnh sản phẩm để dựng ảnh.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.neo.productinroom;
+				PRODUCT_NAME = Drape;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8EB7CE15260FECCA8C8B16CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.neo.productinroom.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Drape.app/Drape";
+			};
+			name = Debug;
+		};
+		A97A7AD85C5D061E7ACF9357 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		BC3CF9A1FD7CA0346B17B30E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.neo.productinroom.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Drape.app/Drape";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4775598F8C7963F9D4B2301F /* Build configuration list for PBXNativeTarget "Drape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E41FADB3C9D8A8F0F725290 /* Debug */,
+				4E968A572FD16759EF363A46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C63D5D17B025B0A98131581D /* Build configuration list for PBXProject "Drape" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C09BD9DEAE8736B3C6D9694 /* Debug */,
+				A97A7AD85C5D061E7ACF9357 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CC0780BD599AA3ECEE43E04E /* Build configuration list for PBXNativeTarget "DrapeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8EB7CE15260FECCA8C8B16CC /* Debug */,
+				BC3CF9A1FD7CA0346B17B30E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 40F312D578436388E0B2C39F /* Project object */;
+}
