@@ -32,13 +32,13 @@ enum Placement: String, CaseIterable, Identifiable, Sendable {
     var instruction: String {
         switch self {
         case .sofaThrow:
-            "draped naturally over the back and left armrest of the sofa, with soft realistic folds falling toward the seat"
+            "draped over the sofa as a large throw that covers the seat and backrest, spilling over the armrests into natural folds falling toward the floor"
         case .tableRunner:
-            "laid flat as a table runner down the center of the table, edges hanging slightly over both sides"
+            "draped over the table, covering the top surface and hanging down over both edges with natural folds"
         case .cushionCover:
             "used as the fabric cover of the existing throw cushion, replacing only the cushion's surface pattern while keeping its exact shape, size and position"
         case .bedThrow:
-            "folded across the foot of the bed, draping over both sides with natural weight and folds"
+            "spread over the bed as a large cover that drapes down over both sides and the foot, with natural weight and folds"
         case .curtain:
             "hanging as curtain panels on the existing window, following the existing curtain rod and window dimensions"
         case .rug:
@@ -70,25 +70,26 @@ enum PromptBuilder {
         You are compositing a real product into a real interior photograph.
 
         IMAGE 1 is the ROOM (the scene).
-        IMAGE 2 is the PRODUCT (a handwoven home textile).
+        IMAGE 2 is the PRODUCT: a large handwoven textile — a throw / cover / blanket meant to be DRAPED over furniture.
 
-        TASK: Place the product from IMAGE 2 into the room from IMAGE 1, \(where_).
+        TASK: Take the exact fabric shown in IMAGE 2 and drape it in the room from IMAGE 1 so that it is \(where_). The product should read as a real woven cloth laid over the furniture, not as a flat sticker or a repainted surface.
+
+        PRODUCT FIDELITY — THIS IS THE MOST IMPORTANT RULE:
+        - IMAGE 2 is the ground truth for the fabric. Reproduce its weave pattern, motif, stripes, borders, thread texture and colours EXACTLY, pixel-faithfully.
+        - Do NOT redraw, invent, simplify, smooth, stylise, recolour or "improve" the pattern. Do NOT swap it for a generic knit or a different design.
+        - Keep the correct scale and repeat of the motif; do NOT stretch, shrink, mirror or tile it wrongly.
+        - Only bend/warp the pattern to follow the folds and drape of the cloth — the design itself stays identical to IMAGE 2.
 
         HARD CONSTRAINTS — the room must stay real:
         - Keep the room's architecture, camera angle, focal length and perspective EXACTLY unchanged.
         - Do NOT add, remove, resize or move any existing furniture, walls, windows, plants or decor.
         - Do NOT change the wall colour, flooring, or the overall composition and framing.
-        - Change ONLY the area where the product is placed.
-
-        PRODUCT FIDELITY — this is a real catalogue item:
-        - Reproduce the exact weave pattern, thread texture, colours and proportions shown in IMAGE 2.
-        - Do NOT invent, simplify, restyle or recolour the pattern. Do NOT mirror or repeat it incorrectly.
-        - Keep the product's real-world scale plausible relative to the furniture around it.
+        - Change ONLY the area covered by the draped product.
 
         PHYSICAL REALISM:
+        - The cloth drapes with real weight: soft folds, creases, sagging and foreshortening that follow the furniture's geometry.
         - Match the room's existing lighting direction, colour temperature, exposure and shadow softness.
         - Add correct contact shadows and ambient occlusion where the fabric touches surfaces.
-        - Fabric must drape with real weight: folds, creases and foreshortening that follow the surface geometry.
         - Keep the same grain, noise level and depth of field as IMAGE 1.
 
         OUTPUT: one photorealistic interior photograph. No text, no watermark, no logo, no border, no collage.

@@ -39,7 +39,7 @@ struct EditRequest: Sendable {
     var prompt: String
     var model: ImageModel = .mini       // mini = rẻ nhất, đủ dùng để xem thử
     var size: OutputSize = .square      // luôn vuông 1024x1024 — rẻ nhất
-    var quality: String = "low"         // "low" | "medium" | "high" | "auto" — low để tiết kiệm
+    var quality: String = "medium"      // "low" | "medium" | "high" | "auto" — medium để giữ họa tiết
     var maskImage: UIImage? = nil       // optional — vùng trắng/trong suốt = cho phép sửa
 }
 
@@ -100,16 +100,16 @@ actor OpenAIImageEditService {
             throw OpenAIError.missingKey
         }
 
-        // Downscale trước khi gửi: ảnh nhỏ hơn = ít input token = rẻ hơn.
+        // Phòng downscale mạnh (ít quan trọng), nhưng SẢN PHẨM giữ nét cao để bắt đúng họa tiết dệt.
         guard
             let roomData = request.roomImage.jpegForUpload(maxDimension: 1024),
-            let productData = request.productImage.jpegForUpload(maxDimension: 1024)
+            let productData = request.productImage.jpegForUpload(maxDimension: 1536, quality: 0.95)
         else { throw OpenAIError.encodingFailed }
 
         var form = MultipartForm()
         form.addField("model", request.model.rawValue)
         form.addField("prompt", request.prompt)
-        form.addField("input_fidelity", "low")      // low để tiết kiệm chi phí input
+        form.addField("input_fidelity", "high")     // high để GIỮ NGUYÊN họa tiết + màu sản phẩm
         form.addField("size", request.size.rawValue)
         form.addField("quality", request.quality)
         form.addField("output_format", "webp")
