@@ -202,6 +202,8 @@ struct ComposerView: View {
             }
 
             VStack {
+                Spacer()
+
                 if showBackgroundNotice {
                     VStack(spacing: 8) {
                         HStack(spacing: 10) {
@@ -225,9 +227,7 @@ struct ComposerView: View {
                         .cornerRadius(8)
                     }
                     .padding()
-                    .transition(.move(edge: .top).combined(with: .opacity))
-
-                    Spacer()
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
         }
