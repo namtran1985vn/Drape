@@ -33,6 +33,8 @@ final class ComposerModel {
         placement = .sofaThrow
         customInstruction = ""
         extraNotes = ""
+        model = .v1_5
+        size = .portrait
         result = nil
         errorMessage = nil
         lastTokens = nil
