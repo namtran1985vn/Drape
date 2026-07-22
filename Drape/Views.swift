@@ -9,20 +9,33 @@ final class ComposerModel {
     var roomImage: UIImage?
     var productImage: UIImage?
     var placement: Placement = .sofaThrow
-    var customInstruction = ""
     var extraNotes = ""
     var model: ImageModel = .v1_5
     var size: OutputSize = .portrait
 
     var result: UIImage?
     var isRunning = false
+    var isAnalyzing = false
     var errorMessage: String?
     var lastTokens: Int?
 
     private let service = OpenAIImageEditService()
 
     var canRun: Bool {
-        roomImage != nil && productImage != nil && !isRunning && APIKeyStore.hasKey
+        roomImage != nil && productImage != nil && !isRunning && !isAnalyzing && APIKeyStore.hasKey
+    }
+
+    func analyzeAndSetPlacement() async {
+        guard let room = roomImage else { return }
+        isAnalyzing = true
+        errorMessage = nil
+        defer { isAnalyzing = false }
+
+        do {
+            placement = try await service.analyzePlacement(roomImage: room)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     func run() async {
@@ -33,7 +46,7 @@ final class ComposerModel {
 
         let prompt = PromptBuilder.build(
             placement: placement,
-            customInstruction: customInstruction,
+            customInstruction: "",
             extraNotes: extraNotes
         )
 
@@ -71,18 +84,25 @@ struct ComposerView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
+                .onChange(of: vm.roomImage) { _, _ in
+                    Task { await vm.analyzeAndSetPlacement() }
+                }
 
-                Section("Đặt sản phẩm ở đâu") {
-                    Picker("Vị trí", selection: $vm.placement) {
-                        ForEach(Placement.allCases) { Text($0.label).tag($0) }
+                if vm.roomImage != nil {
+                    Section("Vị trí đặt sản phẩm") {
+                        HStack {
+                            if vm.isAnalyzing {
+                                ProgressView().padding(.trailing, 6)
+                                Text("Đang phân tích phòng…").foregroundStyle(.secondary)
+                            } else {
+                                Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                                Text(vm.placement.label).fontWeight(.medium)
+                            }
+                        }
+                        .frame(height: 44)
+                        TextField("Ghi chú thêm (tuỳ chọn)", text: $vm.extraNotes, axis: .vertical)
+                            .lineLimit(1...3)
                     }
-                    if vm.placement == .custom {
-                        TextField("VD: draped over the wooden chair on the right",
-                                  text: $vm.customInstruction, axis: .vertical)
-                            .lineLimit(2...4)
-                    }
-                    TextField("Ghi chú thêm (tuỳ chọn)", text: $vm.extraNotes, axis: .vertical)
-                        .lineLimit(1...3)
                 }
 
                 Section("Chất lượng") {
@@ -177,6 +197,7 @@ struct ImageSlot: View {
         }
     }
 }
+
 
 // MARK: - Settings
 

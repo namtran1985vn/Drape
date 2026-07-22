@@ -82,6 +82,7 @@ enum OpenAIError: LocalizedError {
 actor OpenAIImageEditService {
 
     private let endpoint = URL(string: "https://api.openai.com/v1/images/edits")!
+    private let visionEndpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
 
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
@@ -151,6 +152,109 @@ actor OpenAIImageEditService {
         else { throw OpenAIError.emptyResponse }
 
         return EditResult(image: image, totalTokens: decoded.usage?.total_tokens)
+    }
+
+    /// Phân tích phòng → tự động chọn vị trí tối ưu nhất để đặt sản phẩm.
+    func analyzePlacement(roomImage: UIImage) async throws -> Placement {
+        guard let apiKey = APIKeyStore.key, !apiKey.isEmpty else {
+            throw OpenAIError.missingKey
+        }
+
+        guard let roomData = roomImage.jpegForUpload(maxDimension: 1024) else {
+            throw OpenAIError.encodingFailed
+        }
+
+        let base64 = roomData.base64EncodedString()
+        let placementOptions = Placement.allCases
+            .filter { $0 != .custom }
+            .map { "- \($0.label)" }
+            .joined(separator: "\n")
+
+        struct VisionRequest: Encodable {
+            struct Message: Encodable {
+                struct Content: Encodable {
+                    let type: String
+                    let text: String?
+                    let image_url: ImageUrl?
+
+                    enum CodingKeys: String, CodingKey {
+                        case type, text, image_url
+                    }
+
+                    struct ImageUrl: Encodable {
+                        let url: String
+                    }
+                }
+                let role: String
+                let content: [Content]
+            }
+            let model: String
+            let messages: [Message]
+            let temperature: Double = 0.3
+            let max_tokens: Int = 200
+        }
+
+        let prompt = """
+        Phân tích bức ảnh phòng này. Xác định vị trí TỐI ƯU nhất để trưng bày một chiếc khăn/vải dệt handwoven cho khách hàng có thể nhìn rõ và thấy đẹp.
+
+        Lựa chọn CHỈ MỘT từ danh sách sau:
+        \(placementOptions)
+
+        Trả lời CHỈ tên vị trí, không giải thích.
+        """
+
+        let request = VisionRequest(
+            model: "gpt-4-turbo",
+            messages: [.init(
+                role: "user",
+                content: [
+                    .init(type: "text", text: prompt, image_url: nil),
+                    .init(
+                        type: "image_url",
+                        text: nil,
+                        image_url: .init(url: "data:image/jpeg;base64,\(base64)")
+                    )
+                ]
+            )]
+        )
+
+        var urlRequest = URLRequest(url: visionEndpoint)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+
+        let (data, response) = try await session.data(for: urlRequest)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? -1
+
+        guard (200..<300).contains(status) else {
+            let message = Self.extractErrorMessage(from: data)
+            throw OpenAIError.api(status: status, message: message)
+        }
+
+        struct VisionResponse: Decodable {
+            struct Choice: Decodable {
+                struct Message: Decodable {
+                    let content: String
+                }
+                let message: Message
+            }
+            let choices: [Choice]
+        }
+
+        guard let decoded = try? JSONDecoder().decode(VisionResponse.self, from: data),
+              let responseText = decoded.choices.first?.message.content.trimmingCharacters(in: .whitespacesAndNewlines)
+        else {
+            throw OpenAIError.decodeFailed
+        }
+
+        for placement in Placement.allCases {
+            if responseText.localizedCaseInsensitiveContains(placement.label) {
+                return placement
+            }
+        }
+
+        return .sofaThrow
     }
 
     /// Kiểm tra key có sống không (dùng ở màn Cài đặt).
