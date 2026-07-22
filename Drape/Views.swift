@@ -12,8 +12,7 @@ final class ComposerModel {
     var placement: Placement = .sofaThrow
     var customInstruction = ""
     var extraNotes = ""
-    var model: ImageModel = .v1_5
-    var size: OutputSize = .portrait
+    var model: ImageModel = .mini
 
     var result: UIImage?
     var isRunning = false
@@ -33,8 +32,7 @@ final class ComposerModel {
         placement = .sofaThrow
         customInstruction = ""
         extraNotes = ""
-        model = .v1_5
-        size = .portrait
+        model = .mini
         result = nil
         errorMessage = nil
         lastTokens = nil
@@ -68,7 +66,6 @@ final class ComposerModel {
         let savedProduct = product
         let savedPrompt = prompt
         let savedModel = model
-        let savedSize = size
 
         resetSession()
 
@@ -78,8 +75,7 @@ final class ComposerModel {
                     roomImage: savedRoom,
                     productImage: savedProduct,
                     prompt: savedPrompt,
-                    model: savedModel,
-                    size: savedSize
+                    model: savedModel
                 )
             )
             result = out.image
@@ -152,9 +148,6 @@ struct ComposerView: View {
                 Section("Chất lượng") {
                     Picker("Model", selection: $vm.model) {
                         ForEach(ImageModel.allCases) { Text($0.label).tag($0) }
-                    }
-                    Picker("Khung hình", selection: $vm.size) {
-                        ForEach(OutputSize.allCases) { Text($0.label).tag($0) }
                     }
                 }
 

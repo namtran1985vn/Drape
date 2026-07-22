@@ -37,9 +37,9 @@ struct EditRequest: Sendable {
     var roomImage: UIImage
     var productImage: UIImage
     var prompt: String
-    var model: ImageModel = .v1_5
-    var size: OutputSize = .portrait
-    var quality: String = "high"        // "low" | "medium" | "high" | "auto"
+    var model: ImageModel = .mini       // mini = rẻ nhất, đủ dùng để xem thử
+    var size: OutputSize = .square      // luôn vuông 1024x1024 — rẻ nhất
+    var quality: String = "low"         // "low" | "medium" | "high" | "auto" — low để tiết kiệm
     var maskImage: UIImage? = nil       // optional — vùng trắng/trong suốt = cho phép sửa
 }
 
@@ -100,20 +100,20 @@ actor OpenAIImageEditService {
             throw OpenAIError.missingKey
         }
 
-        // Downscale trước khi gửi: ảnh 12MP không giúp gì, chỉ tốn input token và thời gian.
+        // Downscale trước khi gửi: ảnh nhỏ hơn = ít input token = rẻ hơn.
         guard
-            let roomData = request.roomImage.jpegForUpload(maxDimension: 1536),
+            let roomData = request.roomImage.jpegForUpload(maxDimension: 1024),
             let productData = request.productImage.jpegForUpload(maxDimension: 1024)
         else { throw OpenAIError.encodingFailed }
 
         var form = MultipartForm()
         form.addField("model", request.model.rawValue)
         form.addField("prompt", request.prompt)
-        form.addField("input_fidelity", "high")     // giữ hoa văn dệt + kiến trúc phòng
+        form.addField("input_fidelity", "low")      // low để tiết kiệm chi phí input
         form.addField("size", request.size.rawValue)
         form.addField("quality", request.quality)
         form.addField("output_format", "webp")
-        form.addField("output_compression", "90")
+        form.addField("output_compression", "80")
         form.addField("n", "1")
 
         // THỨ TỰ QUAN TRỌNG: ảnh phòng trước (IMAGE 1), sản phẩm sau (IMAGE 2).
@@ -207,7 +207,7 @@ actor OpenAIImageEditService {
         """
 
         let request = VisionRequest(
-            model: "gpt-4-turbo",
+            model: "gpt-4o-mini",   // rẻ hơn nhiều gpt-4-turbo, vẫn đọc ảnh tốt
             messages: [.init(
                 role: "user",
                 content: [
